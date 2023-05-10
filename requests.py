@@ -5,7 +5,7 @@ import json
 # Function to register user
 def register(firstname: str, surname: str, token: str):
     # URL of the registration endpoint
-    url = "http://3.123.16.12/web/api/register"
+    url = "http://52.59.33.40/web/api/register"
     
     # Prepare the headers for the request, including the bearer token for authentication
     headers = {
@@ -31,7 +31,7 @@ def register(firstname: str, surname: str, token: str):
 # Function to read messages
 def read(code: str, token: str):
     # URL of the read endpoint
-    url = f"http://3.123.16.12/web/api/code"
+    url = f"http://52.59.33.40/web/api/code"
     
     # Prepare the headers for the request, including the bearer token for authentication
     headers = {
