@@ -1,72 +1,76 @@
-# Import necessary modules
 import requests
-import json
 
-# Function to register user
 def register(firstname: str, surname: str, token: str):
-    # URL of the registration endpoint
     url = "http://52.59.33.40/web/api/register"
-    
-    # Prepare the headers for the request, including the bearer token for authentication
     headers = {
         "Authorization": f"Bearer {token}"
     }
-    
-    # Prepare the data to be sent with the request
     data = {
         "firstname": firstname,
         "surname": surname
     }
-    
-    # Send the POST request to the server
     response = requests.post(url, headers=headers, data=data)
     
-    # If the response status code is not 200, raise an exception
-    if response.status_code != 200:
-        raise Exception(f"Request failed with status {response.status_code}")
-        
-    # Return the response in JSON format
-    return response.json()
+    # Create a structured JSON response
+    json_response = {}
+    json_response["status_code"] = response.status_code
 
-# Function to read messages
+    # Determine if the request was successful based on the status code
+    if response.status_code == 200:
+        json_response["result"] = "success"
+        json_response["message"] = "Registration successful. Welcome, Agent Smith."
+    else:
+        json_response["result"] = "error"
+        json_response["message"] = "Your request was made with invalid credentials."
+        
+    return json_response
+
+
+
+
+
 def read(code: str, token: str):
-    # URL of the read endpoint
-    url = f"http://52.59.33.40/web/api/code"
-    
-    # Prepare the headers for the request, including the bearer token for authentication
+    url = f"http://52.59.33.40/web/api/{code}"
     headers = {
         "Authorization": f"Bearer {token}"
     }
+    response = requests.get(url, headers=headers)
     
-    # Prepare the parameters to be sent with the request
-    params = {
-        "code": code
-    }
-    
-    # Send the GET request to the server
-    response = requests.get(url, headers=headers, params=params)
-    
-    # If the response status code is not 200, raise an exception
-    if response.status_code != 200:
-        raise Exception(f"Request failed with status {response.status_code}")
+    # Create a structured JSON response
+    json_response = {}
+    json_response["status_code"] = response.status_code
+
+    # Determine if the request was successful based on the status code
+    if response.status_code == 200:
+        json_response["result"] = "success"
+        json_response["message"] = "Data retrieval successful, Agent Smith."
+        json_response["data"] = response.json()  # assuming the response contains JSON data
+    else:
+        json_response["result"] = "error"
+        json_response["message"] = "Your request was made with invalid credentials."
         
-    # Return the response in JSON format
-    return response.json()
+    return json_response
 
 
-# Set the necessary variables
 token = "2XNVmuH2YVhYvVGgh4YkV9m6ph4c8CxMMX6UzeeDh7LJTmgdLk4Fz38QLwFt3sSY6BHkCeK8B3Jhgt23Q4dX6A3pmFRMGnJejwDg"
 firstname = "John"
 surname = "Doe"
 
-# Call the register function and print the returned code
-response = register(firstname, surname, token)
-code = response.get('code', None)
-if code:
-    print(f"Registered successfully. Your code is: {code}")
 
-# Call the read function and print the returned message
+
+# Register
+response = register(firstname, surname, token)
+print("Registration Response:")
+print("==============================")
+print(response)
+print("\n\n")  
+
+
+token = "2XNVmuH2YVhYvVGgh4YkV9m6ph4c8CxMMX6UzeeDh7LJTmgdLk4Fz38QLwFt3sSY6BHkCeK8B3Jhgt23Q4dX6A3pmFRMGnJejwDg"
+code = "645b7935951fd"
+
+# Read
+print("Read Response:")
+print("==============================")
 response = read(code, token)
-message = response.get('message', None)
-if message:
-    print(f"Received message: {message}")
+print(response)
